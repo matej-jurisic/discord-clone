@@ -1,17 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Modules.Servers.Infrastructure.Persistence;
+using Modules.Servers.Application.Queries;
+using Shared.Kernel.CQRS;
 
 namespace Modules.Servers.Api.Controllers
 {
     [ApiController]
     [Route("api/servers")]
-    public class ServersController(ServersDbContext context) : ControllerBase
+    public class ServersController(
+        IQueryHandler<GetDummyQuery, string> getDummyHandler
+    ) : ControllerBase
     {
-        [HttpGet("test")]
-        public async Task<IActionResult> Test()
+        [HttpGet("dummy")]
+        public async Task<IActionResult> Dummy()
         {
-            return Ok(await context.Servers.FirstOrDefaultAsync());
+            var result = await getDummyHandler.HandleAsync(new GetDummyQuery("hello from query"));
+
+            if (result.IsSuccess)
+                return Ok(result);
+
+            return BadRequest(result);
         }
     }
 }
