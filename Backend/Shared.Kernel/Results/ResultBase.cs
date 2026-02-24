@@ -1,4 +1,4 @@
-﻿namespace Shared.Result
+﻿namespace Shared.Results
 {
     public abstract class ResultBase
     {
