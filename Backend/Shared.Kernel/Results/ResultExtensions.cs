@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Shared.Result;
+using Shared.Results;
 
-namespace API.Extensions
+namespace Shared.Kernel.Results
 {
     public static class ApiResultExtensions
     {
