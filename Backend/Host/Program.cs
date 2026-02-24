@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Modules.Servers;
 using Modules.Servers.Infrastructure.Persistence;
+using Serilog;
 using Shared.Infrastructure.MediatorConfiguration;
 using System.Reflection;
 
@@ -11,6 +12,11 @@ builder.Services.AddControllers();
 builder.Services.AddServersModule(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Host.UseSerilog((context, configuration) =>
+{
+    configuration.ReadFrom.Configuration(context.Configuration);
+});
 
 builder.Services.AddMediator(options =>
 {
@@ -25,6 +31,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 
