@@ -1,4 +1,5 @@
 using Host.Extensions;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
 using Modules.Messages;
 using Modules.Messages.Infrastructure.Persistence;
@@ -6,13 +7,19 @@ using Modules.Servers;
 using Modules.Servers.Infrastructure.Persistence;
 using Serilog;
 using Shared.Infrastructure.MediatorConfiguration;
+using Shared.Infrastructure.Transformers;
 using System.Reflection;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 
-builder.Services.AddControllers();
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
+builder.Services.AddControllers(options =>
+{
+    options.Conventions.Add(
+        new RouteTokenTransformerConvention(new ControllerNameTransformer())
+    );
+});
 builder.Services.AddServersModule(builder.Configuration);
 builder.Services.AddMessagesModule(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
