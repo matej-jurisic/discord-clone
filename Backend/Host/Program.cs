@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Modules.Messages;
+using Modules.Messages.Infrastructure.Persistence;
 using Modules.Servers;
 using Modules.Servers.Infrastructure.Persistence;
 using Serilog;
@@ -10,6 +12,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddControllers();
 builder.Services.AddServersModule(builder.Configuration);
+builder.Services.AddMessagesModule(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -21,6 +24,7 @@ builder.Host.UseSerilog((context, configuration) =>
 builder.Services.AddMediator(options =>
 {
     options.Assemblies.Add(Assembly.Load("Modules.Servers"));
+    options.Assemblies.Add(Assembly.Load("Modules.Messages"));
 });
 
 var app = builder.Build();
@@ -42,8 +46,11 @@ app.MapControllers();
 
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<ServersDbContext>();
-    db.Database.Migrate();
+    var serversDb = scope.ServiceProvider.GetRequiredService<ServersDbContext>();
+    serversDb.Database.Migrate();
+
+    var messagesDb = scope.ServiceProvider.GetRequiredService<MessagesDbContext>();
+    messagesDb.Database.Migrate();
 }
 
 app.Run();
