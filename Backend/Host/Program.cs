@@ -1,3 +1,4 @@
+using Host.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Modules.Messages;
 using Modules.Messages.Infrastructure.Persistence;
@@ -6,6 +7,7 @@ using Modules.Servers.Infrastructure.Persistence;
 using Serilog;
 using Shared.Infrastructure.MediatorConfiguration;
 using System.Reflection;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
@@ -27,6 +29,8 @@ builder.Services.AddMediator(options =>
     options.Assemblies.Add(Assembly.Load("Modules.Messages"));
 });
 
+builder.Services.AddHealthCheckEndpoint(builder.Configuration);
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -43,6 +47,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHealthCheckEndpoint();
 
 using (var scope = app.Services.CreateScope())
 {
