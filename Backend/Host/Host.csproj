@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -16,6 +16,7 @@
   </ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\Modules.Messages\Modules.Messages.csproj" />
 	  <ProjectReference Include="..\Modules.Servers\Modules.Servers.csproj" />
 	  <ProjectReference Include="..\Shared.Infrastructure\Shared.Infrastructure.csproj" />
 	  <ProjectReference Include="..\Shared.Kernel\Shared.Kernel.csproj" />
