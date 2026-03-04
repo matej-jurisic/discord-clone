@@ -1,13 +1,15 @@
+using Infrastructure.MediatorConfiguration;
+using Infrastructure.Transformers;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Host.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Modules.Messages;
+using Modules.Messages.Endpoints;
+using Modules.Messages.Infrastructure;
 using Modules.Messages.Infrastructure.Persistence;
-using Modules.Servers;
+using Modules.Servers.Endpoints;
+using Modules.Servers.Infrastructure;
 using Modules.Servers.Infrastructure.Persistence;
 using Serilog;
-using Shared.Infrastructure.MediatorConfiguration;
-using Shared.Infrastructure.Transformers;
 using System.Reflection;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
@@ -21,8 +23,13 @@ builder.Services.AddControllers(options =>
         new RouteTokenTransformerConvention(new ControllerNameTransformer())
     );
 });
-builder.Services.AddServersModule(builder.Configuration);
-builder.Services.AddMessagesModule(builder.Configuration);
+
+builder.Services.AddServersEndpoints();
+builder.Services.AddServersInfrastructure(builder.Configuration);
+
+builder.Services.AddMessagesEndpoints();
+builder.Services.AddMessagesInfrastructure(builder.Configuration);
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -33,8 +40,8 @@ builder.Host.UseSerilog((context, configuration) =>
 
 builder.Services.AddMediator(options =>
 {
-    options.Assemblies.Add(Assembly.Load("Modules.Servers"));
-    options.Assemblies.Add(Assembly.Load("Modules.Messages"));
+    options.Assemblies.Add(Assembly.Load("Modules.Servers.Application"));
+    options.Assemblies.Add(Assembly.Load("Modules.Messages.Application"));
 });
 
 builder.Services.AddHealthCheckEndpoint(builder.Configuration);
@@ -50,7 +57,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseSerilogRequestLogging();
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthorization();
 
