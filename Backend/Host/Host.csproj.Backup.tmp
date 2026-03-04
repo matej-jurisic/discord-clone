@@ -6,8 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0" />
+	<ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.10" />
 	<PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.13">
@@ -17,11 +16,7 @@
   </ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
-	  <ProjectReference Include="..\Kernel\Kernel.csproj" />
-	  <ProjectReference Include="..\Modules.Messages.Endpoints\Modules.Messages.Endpoints.csproj" />
-	  <ProjectReference Include="..\Modules.Messages.Infrastructure\Modules.Messages.Infrastructure.csproj" />
-	  <ProjectReference Include="..\Modules.Servers.Endpoints\Modules.Servers.Endpoints.csproj" />
-	  <ProjectReference Include="..\Modules.Servers.Infrastructure\Modules.Servers.Infrastructure.csproj" />
+	  <ProjectReference Include="..\Shared\Infrastructure\Infrastructure.csproj" />
+	  <ProjectReference Include="..\Shared\Kernel\Kernel.csproj" />
 	</ItemGroup>
 </Project>
